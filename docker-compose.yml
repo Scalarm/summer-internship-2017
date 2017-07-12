@@ -1,25 +1,33 @@
-nginx:
-  container_name: nginx
-  image: nginx
-  volumes:
-    - /etc/localtime:/etc/localtime:ro
-    - $PWD/nginx-scalarm:/etc/nginx:rw
-    - /tmp:/tmp:rw
-  ports:
-    - 443:443
-  environment:
-    - LE_RENEW_HOOK=docker kill -s HUP @CONTAINER_NAME@
-scalarm-redis:
-  container_name: scalarm-redis
-  image: redis
-  ports:
-    - 6379:6379
-scalarm-mongo:
-  container_name: scalarm-mongo
-  image: mongo:3.4.3
-  command: --storageEngine wiredTiger
-  volumes:
-    - /etc/localtime:/etc/localtime:ro
-    - $HOME/Scalarm/scalarm-db:/data/db 
-  ports:
-    - 27017:27017
+version: '2.0'
+services:
+  nginx:
+    container_name: nginx
+    image: nginx
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $PWD/nginx-scalarm:/etc/nginx:rw
+      - /tmp:/tmp:rw
+    ports:
+      - 443:443
+    environment:
+      - LE_RENEW_HOOK=docker kill -s HUP @CONTAINER_NAME@
+  scalarm-redis:
+    container_name: scalarm-redis
+    image: redis
+    ports:
+      - 6379:6379
+  scalarm-mongo:
+    container_name: scalarm-mongo
+    image: mongo:3.4.3
+    command: --storageEngine wiredTiger
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - $HOME/Scalarm/scalarm-db:/data/db 
+    ports:
+      - 27017:27017
+# Needed to work in Cyfronet
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1400
