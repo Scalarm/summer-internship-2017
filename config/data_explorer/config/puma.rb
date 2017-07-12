@@ -1,6 +1,6 @@
 environment 'development'
 daemonize
-bind 'unix:/tmp/scalarm_experiment_manager.sock'
+bind 'unix:/tmp/scalarm_experiment_supervisor.sock'
 stdout_redirect 'log/puma.log', 'log/puma.log.err', true
 pidfile 'puma.pid'
 threads 1,5
