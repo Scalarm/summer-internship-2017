@@ -1,0 +1,6 @@
+development:
+  clients:
+    default:
+      database: scalarm_db
+      hosts:
+        - localhost:27017
