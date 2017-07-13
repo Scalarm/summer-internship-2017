@@ -1,4 +1,4 @@
-environment 'development'
+environment 'production'
 daemonize
 bind 'unix:/tmp/scalarm_experiment_manager.sock'
 stdout_redirect 'log/puma.log', 'log/puma.log.err', true
