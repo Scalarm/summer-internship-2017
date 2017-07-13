@@ -1,6 +1,6 @@
-environment 'production'
+environment 'development'
 daemonize
-bind 'unix:/tmp/scalarm_data_explorer.sock'
+bind 'tcp://0.0.0.0:3002'
 stdout_redirect 'log/puma.log', 'log/puma.log.err', true
 pidfile 'puma.pid'
 threads 1,5

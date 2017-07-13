@@ -1,16 +1,5 @@
 version: '2.0'
 services:
-  nginx:
-    container_name: nginx
-    image: nginx
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $PWD/nginx-scalarm:/etc/nginx:rw
-      - /tmp:/tmp:rw
-    ports:
-      - 443:443
-    environment:
-      - LE_RENEW_HOOK=docker kill -s HUP @CONTAINER_NAME@
   scalarm-redis:
     container_name: scalarm-redis
     image: redis
