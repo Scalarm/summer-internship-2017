@@ -1,4 +1,4 @@
-production:
+development:
   clients:
     default:
       database: scalarm_db
