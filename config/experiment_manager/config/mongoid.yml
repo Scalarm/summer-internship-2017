@@ -1,6 +1,12 @@
-development:
+default: &DEFAUT
   clients:
     default:
-      database: scalarm_db
+      database: "<%= ENV['MONGO_DB_NAME'] %>"
       hosts:
-        - localhost:27017
+        - "<%= ENV['MONGO_ADDRESS'] %>"
+
+production:
+  <<: *DEFAULT
+
+development:
+  <<: *DEFAULT
