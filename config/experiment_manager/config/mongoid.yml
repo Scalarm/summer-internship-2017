@@ -1,4 +1,4 @@
-default: &DEFAUT
+default: &DEFAULT
   clients:
     default:
       database: "<%= ENV['MONGO_DB_NAME'] %>"

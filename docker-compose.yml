@@ -11,14 +11,16 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - $HOME/Scalarm/scalarm-db:/data/db 
   scalarm-experiment-manager:
+    env_file:
+      - $PWD/environment.env
     container_name: scalarm-experiment-manager
     image: dkrol3/scalarm:latest
     # entrypoint: sleep
     # command: infinity
     volumes:
-      - $PWD/scalarm_experiment_manager/config/puma.rb:/scalarm/config/puma.rb:ro
-      - $PWD/scalarm_experiment_manager/config/secrets.yml:/scalarm/config/secrets.yml:ro
-      - $PWD/scalarm_experiment_manager/config/mongoid.yml:/scalarm/config/mongoid.yml:ro
+      - $PWD/config/experiment_manager/config/puma.rb:/scalarm/config/puma.rb:ro
+      - $PWD/config/experiment_manager/config/secrets.yml:/scalarm/config/secrets.yml:ro
+      - $PWD/config/experiment_manager/config/mongoid.yml:/scalarm/config/mongoid.yml:ro
     links:
       - scalarm-mongo:mongo
       - scalarm-redis:redis
