@@ -14,13 +14,15 @@ services:
     env_file:
       - $PWD/environment.env
     container_name: scalarm-experiment-manager
-    image: dkrol3/scalarm:latest
-    # entrypoint: sleep
-    # command: infinity
+    image: kliput/scalarm:intern17-1
+    # command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && git pull && bundle install && rake service:start && tail -f log/${RAILS_ENV}.log'
+    command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && rake service:start && tail -f log/${RAILS_ENV}.log'
     volumes:
       - $PWD/config/experiment_manager/config/puma.rb:/scalarm/config/puma.rb:ro
       - $PWD/config/experiment_manager/config/secrets.yml:/scalarm/config/secrets.yml:ro
       - $PWD/config/experiment_manager/config/mongoid.yml:/scalarm/config/mongoid.yml:ro
+      - $PWD/config/certs/server.crt:/scalarm/config/server.crt:ro
+      - $PWD/config/certs/server.key:/scalarm/config/server.key:ro
     links:
       - scalarm-mongo:mongo
       - scalarm-redis:redis
