@@ -6,7 +6,7 @@
 # $2 - address
 function check {
 #	echo -n "$1 -> "
-	STATUS=`curl -skw "%{http_code}" http://$2/status.json -o /dev/null`
+	STATUS=`curl -skw "%{http_code}" https://$2/status.json -o /dev/null`
 	if [ $STATUS == "200" ]; then
 		echo -e "\033[1;32m$1 -> $STATUS\033[0m"
 	else
