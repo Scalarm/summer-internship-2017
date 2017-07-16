@@ -1,5 +1,6 @@
 #!/bin/bash
 ## NOTE: invoke this script only from repo root!
 set -e
-export $(cat environment.env | xargs)
+THIS_DIR=`dirname "$0"`
+source ${THIS_DIR}/load_env.sh
 docker-compose up -d
