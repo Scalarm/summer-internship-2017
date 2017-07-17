@@ -28,6 +28,20 @@ services:
       - scalarm-redis:redis
     ports:
       - ${EXPERIMENT_MANAGER_PORT}:${EXPERIMENT_MANAGER_PORT}
+  scalarm-data-explorer:
+    env_file:
+      - $PWD/environment.env
+    container_name: scalarm-data-explorer
+    image: scalarm/scalarm-data-explorer:1.0
+    command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && rake service:start && tail -f log/${RAILS_ENV}.log'
+    volumes:
+      - $PWD/config/data_explorer/config/puma.rb:/scalarm/config/puma.rb:ro
+      - $PWD/config/data_explorer/config/secrets.yml:/scalarm/config/secrets.yml:ro
+      - $PWD/config/data_explorer/config/mongoid.yml:/scalarm/config/mongoid.yml:ro
+      - $PWD/config/certs/server.crt:/scalarm/config/server.crt:ro
+      - $PWD/config/certs/server.key:/scalarm/config/server.key:ro
+    ports:
+      - ${DATA_EXPLORER_PORT}:${DATA_EXPLORER_PORT}
 # Needed to work in Cyfronet
 networks:
   default:
