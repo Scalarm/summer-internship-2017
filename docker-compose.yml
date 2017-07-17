@@ -3,8 +3,6 @@ services:
   scalarm-redis:
     container_name: scalarm-redis
     image: redis
-    ports:
-      - 6379:6379
   scalarm-mongo:
     container_name: scalarm-mongo
     image: mongo:3.4.3
@@ -12,8 +10,24 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $HOME/Scalarm/scalarm-db:/data/db 
+  scalarm-experiment-manager:
+    env_file:
+      - $PWD/environment.env
+    container_name: scalarm-experiment-manager
+    image: kliput/scalarm:intern17-1
+    # command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && git pull && bundle install && rake service:start && tail -f log/${RAILS_ENV}.log'
+    command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && rake service:start && tail -f log/${RAILS_ENV}.log'
+    volumes:
+      - $PWD/config/experiment_manager/config/puma.rb:/scalarm/config/puma.rb:ro
+      - $PWD/config/experiment_manager/config/secrets.yml:/scalarm/config/secrets.yml:ro
+      - $PWD/config/experiment_manager/config/mongoid.yml:/scalarm/config/mongoid.yml:ro
+      - $PWD/config/certs/server.crt:/scalarm/config/server.crt:ro
+      - $PWD/config/certs/server.key:/scalarm/config/server.key:ro
+    links:
+      - scalarm-mongo:mongo
+      - scalarm-redis:redis
     ports:
-      - 27017:27017
+      - ${EXPERIMENT_MANAGER_PORT}:${EXPERIMENT_MANAGER_PORT}
 # Needed to work in Cyfronet
 networks:
   default:
