@@ -42,6 +42,22 @@ services:
       - $PWD/config/certs/server.key:/scalarm/config/server.key:ro
     ports:
       - ${DATA_EXPLORER_PORT}:${DATA_EXPLORER_PORT}
+  scalarm-experiment-supervisor:
+    env_file:
+      - $PWD/environment.env
+    container_name: scalarm-experiment-supervisor
+    image: scalarm/scalarm-experiment-supervisor:1.0.0
+    command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && rake service:start && tail -f log/${RAILS_ENV}.log'
+    volumes:
+      - $PWD/config/experiment_supervisor/config/puma.rb:/scalarm/config/puma.rb:ro
+      - $PWD/config/experiment_supervisor/config/secrets.yml:/scalarm/config/secrets.yml:ro
+      - $PWD/config/experiment_supervisor/config/mongoid.yml:/scalarm/config/mongoid.yml:ro
+      - $PWD/config/certs/server.crt:/scalarm/config/server.crt:ro
+      - $PWD/config/certs/server.key:/scalarm/config/server.key:ro
+    ports:
+      - ${EXPERIMENT_SUPERVISOR_PORT}:${EXPERIMENT_SUPERVISOR_PORT}
+
+
 # Needed to work in Cyfronet
 networks:
   default:
