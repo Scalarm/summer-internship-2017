@@ -59,14 +59,12 @@ services:
       - ${EXPERIMENT_MANAGER_PORT}:${EXPERIMENT_MANAGER_PORT}
   scalarm-simulation-manager:
     container_name: scalarm-simulation-manager
-    image: scalarm/scalarm-simulation-manager:1.0.2
+    image: scalarm/scalarm-simulation-manager:1.0.3
     command: /bin/bash -c './scalarm_simulation_manager_go'
     volumes:
       - $PWD/config/simulation_manager/config/config.json:/scalarm/bin/config.json:rw
     links:
       - scalarm-experiment-manager:manager
-    ports:
-      - 3003:3003
 
 # Needed to work in Cyfronet
 networks:
