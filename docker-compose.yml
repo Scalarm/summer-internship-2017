@@ -14,7 +14,7 @@ services:
     env_file:
       - $PWD/environment.env
     container_name: scalarm-data-explorer
-    image: scalarm/scalarm-data-explorer:1.0
+    image: scalarm/scalarm_data_explorer:1.1
     command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && rake service:start && tail -f log/${RAILS_ENV}.log'
     volumes:
       - $PWD/config/data_explorer/config/puma.rb:/scalarm/config/puma.rb:ro
@@ -24,11 +24,13 @@ services:
       - $PWD/config/certs/server.key:/scalarm/config/server.key:ro
     ports:
       - ${DATA_EXPLORER_PORT}:${DATA_EXPLORER_PORT}
+    links:
+     - scalarm-mongo:mongo
   scalarm-experiment-supervisor:
     env_file:
       - $PWD/environment.env
     container_name: scalarm-experiment-supervisor
-    image: scalarm/scalarm-experiment-supervisor:1.0.0
+    image: scalarm/scalarm_experiment_supervisor:1.1
     command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && rake service:start && tail -f log/${RAILS_ENV}.log'
     volumes:
       - $PWD/config/experiment_supervisor/config/puma.rb:/scalarm/config/puma.rb:ro
@@ -38,6 +40,8 @@ services:
       - $PWD/config/certs/server.key:/scalarm/config/server.key:ro
     ports:
       - ${EXPERIMENT_SUPERVISOR_PORT}:${EXPERIMENT_SUPERVISOR_PORT}
+    links:
+     - scalarm-mongo:mongo
   scalarm-experiment-manager:
     env_file:
       - $PWD/environment.env
@@ -45,16 +49,17 @@ services:
     image: scalarm/experiment-manager:1.0.1
     # command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && git pull && bundle install && rake service:start && tail -f log/${RAILS_ENV}.log'
     command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && rake service:start && tail -f log/${RAILS_ENV}.log'
-    #volumes:
-    #  - $PWD/config/experiment_manager/config/puma.rb:/scalarm/config/puma.rb:ro
-    #  - $PWD/config/experiment_manager/config/secrets.yml:/scalarm/config/secrets.yml:ro
-    #  - $PWD/config/experiment_manager/config/mongoid.yml:/scalarm/config/mongoid.yml:ro
-    #  - $PWD/config/certs/server.crt:/scalarm/config/server.crt:ro
-    #  - $PWD/config/certs/server.key:/scalarm/config/server.key:ro
+    volumes:
+      - $PWD/config/experiment_manager/config/puma.rb:/scalarm/config/puma.rb:ro
+      - $PWD/config/experiment_manager/config/secrets.yml:/scalarm/config/secrets.yml:ro
+      - $PWD/config/experiment_manager/config/mongoid.yml:/scalarm/config/mongoid.yml:ro
+      - $PWD/config/certs/server.crt:/scalarm/config/server.crt:ro
+      - $PWD/config/certs/server.key:/scalarm/config/server.key:ro
     links:
       - scalarm-mongo:mongo
       - scalarm-redis:redis
       - scalarm-experiment-supervisor:supervisor
+      - scalarm-data-explorer:explorer
     ports:
       - ${EXPERIMENT_MANAGER_PORT}:${EXPERIMENT_MANAGER_PORT}
   scalarm-simulation-manager:
