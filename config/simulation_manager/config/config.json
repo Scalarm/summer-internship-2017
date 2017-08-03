@@ -1,7 +1,7 @@
 {
 	"information_service_url":"manager:3000/information",
 	"experiment_manager_user":"scalarm",
-	"experiment_manager_pass":"scalarm1024",
+	"experiment_manager_pass":"scalarm",
 	"development":false,
 	"start_at":"",
 	"timeout":20000,

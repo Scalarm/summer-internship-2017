@@ -47,7 +47,6 @@ services:
       - $PWD/environment.env
     container_name: scalarm-experiment-manager
     image: scalarm/experiment-manager:1.0.1
-    # command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && git pull && bundle install && rake service:start && tail -f log/${RAILS_ENV}.log'
     command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && rake service:start && tail -f log/${RAILS_ENV}.log'
     volumes:
       - $PWD/config/experiment_manager/config/puma.rb:/scalarm/config/puma.rb:ro
