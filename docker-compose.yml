@@ -14,7 +14,7 @@ services:
     env_file:
       - $PWD/environment.env
     container_name: scalarm-data-explorer
-    image: scalarm/scalarm_data_explorer:17.08
+    image: scalarm/scalarm_data_explorer:17.08.1
     command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && rake service:start && tail -f log/${RAILS_ENV}.log'
     volumes:
       - $PWD/config/data_explorer/config/puma.rb:/scalarm/config/puma.rb:ro
@@ -29,7 +29,7 @@ services:
     env_file:
       - $PWD/environment.env
     container_name: scalarm-experiment-supervisor
-    image: scalarm/scalarm_experiment_supervisor:17.08
+    image: scalarm/scalarm_experiment_supervisor:17.08.1
     command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && rake service:start && tail -f log/${RAILS_ENV}.log'
     volumes:
       - $PWD/config/experiment_supervisor/config/puma.rb:/scalarm/config/puma.rb:ro
@@ -44,7 +44,7 @@ services:
     env_file:
       - $PWD/environment.env
     container_name: scalarm-experiment-manager
-    image: scalarm/scalarm_experiment_manager:17.08
+    image: scalarm/scalarm_experiment_manager:17.08.1
     command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && rake service:start && tail -f log/${RAILS_ENV}.log'
     volumes:
       - $PWD/config/experiment_manager/config/puma.rb:/scalarm/config/puma.rb:ro
