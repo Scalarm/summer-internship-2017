@@ -14,12 +14,11 @@ services:
     env_file:
       - $PWD/environment.env
     container_name: scalarm-data-explorer
-    image: scalarm/scalarm_data_explorer:1.1
+    image: scalarm/scalarm_data_explorer:17.08
     command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && rake service:start && tail -f log/${RAILS_ENV}.log'
     volumes:
       - $PWD/config/data_explorer/config/puma.rb:/scalarm/config/puma.rb:ro
       - $PWD/config/data_explorer/config/secrets.yml:/scalarm/config/secrets.yml:ro
-      - $PWD/config/data_explorer/config/mongoid.yml:/scalarm/config/mongoid.yml:ro
       - $PWD/config/certs/server.crt:/scalarm/config/server.crt:ro
       - $PWD/config/certs/server.key:/scalarm/config/server.key:ro
     ports:
@@ -30,12 +29,11 @@ services:
     env_file:
       - $PWD/environment.env
     container_name: scalarm-experiment-supervisor
-    image: scalarm/scalarm_experiment_supervisor:1.1
+    image: scalarm/scalarm_experiment_supervisor:17.08
     command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && rake service:start && tail -f log/${RAILS_ENV}.log'
     volumes:
       - $PWD/config/experiment_supervisor/config/puma.rb:/scalarm/config/puma.rb:ro
       - $PWD/config/experiment_supervisor/config/secrets.yml:/scalarm/config/secrets.yml:ro
-      - $PWD/config/experiment_supervisor/config/mongoid.yml:/scalarm/config/mongoid.yml:ro
       - $PWD/config/certs/server.crt:/scalarm/config/server.crt:ro
       - $PWD/config/certs/server.key:/scalarm/config/server.key:ro
     ports:
@@ -46,7 +44,7 @@ services:
     env_file:
       - $PWD/environment.env
     container_name: scalarm-experiment-manager
-    image: scalarm/experiment-manager:1.0.1
+    image: scalarm/scalarm_experiment_manager:17.08
     command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && rake service:start && tail -f log/${RAILS_ENV}.log'
     volumes:
       - $PWD/config/experiment_manager/config/puma.rb:/scalarm/config/puma.rb:ro
@@ -63,7 +61,7 @@ services:
       - ${EXPERIMENT_MANAGER_PORT}:${EXPERIMENT_MANAGER_PORT}
   scalarm-simulation-manager:
     container_name: scalarm-simulation-manager
-    image: scalarm/scalarm-simulation-manager:1.0.3
+    image: scalarm/scalarm_simulation_manager:17.08
     command: /bin/bash -c './scalarm_simulation_manager_go'
     volumes:
       - $PWD/config/simulation_manager/config/config.json:/scalarm/bin/config.json:rw
