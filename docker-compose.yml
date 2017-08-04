@@ -10,12 +10,41 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $HOME/Scalarm/scalarm-db:/data/db 
+  scalarm-data-explorer:
+    env_file:
+      - $PWD/environment.env
+    container_name: scalarm-data-explorer
+    image: scalarm/scalarm_data_explorer:17.08.1
+    command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && rake service:start && tail -f log/${RAILS_ENV}.log'
+    volumes:
+      - $PWD/config/data_explorer/config/puma.rb:/scalarm/config/puma.rb:ro
+      - $PWD/config/data_explorer/config/secrets.yml:/scalarm/config/secrets.yml:ro
+      - $PWD/config/certs/server.crt:/scalarm/config/server.crt:ro
+      - $PWD/config/certs/server.key:/scalarm/config/server.key:ro
+    ports:
+      - ${DATA_EXPLORER_PORT}:${DATA_EXPLORER_PORT}
+    links:
+     - scalarm-mongo:mongo
+  scalarm-experiment-supervisor:
+    env_file:
+      - $PWD/environment.env
+    container_name: scalarm-experiment-supervisor
+    image: scalarm/scalarm_experiment_supervisor:17.08.1
+    command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && rake service:start && tail -f log/${RAILS_ENV}.log'
+    volumes:
+      - $PWD/config/experiment_supervisor/config/puma.rb:/scalarm/config/puma.rb:ro
+      - $PWD/config/experiment_supervisor/config/secrets.yml:/scalarm/config/secrets.yml:ro
+      - $PWD/config/certs/server.crt:/scalarm/config/server.crt:ro
+      - $PWD/config/certs/server.key:/scalarm/config/server.key:ro
+    ports:
+      - ${EXPERIMENT_SUPERVISOR_PORT}:${EXPERIMENT_SUPERVISOR_PORT}
+    links:
+     - scalarm-mongo:mongo
   scalarm-experiment-manager:
     env_file:
       - $PWD/environment.env
     container_name: scalarm-experiment-manager
-    image: kliput/scalarm:intern17-1
-    # command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && git pull && bundle install && rake service:start && tail -f log/${RAILS_ENV}.log'
+    image: scalarm/scalarm_experiment_manager:17.08.1
     command: /bin/bash -c 'source /usr/local/rvm/scripts/rvm && rake service:start && tail -f log/${RAILS_ENV}.log'
     volumes:
       - $PWD/config/experiment_manager/config/puma.rb:/scalarm/config/puma.rb:ro
@@ -26,8 +55,19 @@ services:
     links:
       - scalarm-mongo:mongo
       - scalarm-redis:redis
+      - scalarm-experiment-supervisor:supervisor
+      - scalarm-data-explorer:explorer
     ports:
       - ${EXPERIMENT_MANAGER_PORT}:${EXPERIMENT_MANAGER_PORT}
+  scalarm-simulation-manager:
+    container_name: scalarm-simulation-manager
+    image: scalarm/scalarm_simulation_manager:17.08
+    command: /bin/bash -c './scalarm_simulation_manager_go'
+    volumes:
+      - $PWD/config/simulation_manager/config/config.json:/scalarm/bin/config.json:rw
+    links:
+      - scalarm-experiment-manager:manager
+
 # Needed to work in Cyfronet
 networks:
   default:
